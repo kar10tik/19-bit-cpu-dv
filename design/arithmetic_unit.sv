@@ -47,11 +47,11 @@ module arithmetic_unit(input opcode, operand_1, operand_2, output out);
     
     
     function logic[WORD_SIZE-1:0] INC_function(logic [WORD_SIZE-1:0] in1);
-        return ADD(in1, 19'b1, out);
+        return ADD(in1, 'b1, out);
     endfunction
     
     
     function logic[WORD_SIZE-1:0] DEC_function(logic [WORD_SIZE-1:0] in1);
-        out = SUB(in1, 19'b1, out);
+        out = SUB(in1, 'b1, out);
     endfunction
 endmodule
