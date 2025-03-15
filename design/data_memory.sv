@@ -1,4 +1,4 @@
-import constants::*
+
 
 module data_memory (
     input logic clk,
@@ -7,6 +7,7 @@ module data_memory (
     data_bus_if.memory data_bus
 );
 
+import constants::*;
 logic [WORD_SIZE - 1:0] mem [0:1023];
 
 always_ff @(posedge clk) begin

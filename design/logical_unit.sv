@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
-import constants::*
-import opcodes::*
+
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -24,7 +23,8 @@ import opcodes::*
 
 module logical_unit(input opcode, operand_1, operand_2, output out
     );
-    parameter WORD_SIZE = 19;
+    import constants::*;
+    import opcodes::*;
 
     function AND_function(input [WORD_SIZE-1:0] in1, in2);
         return in1 & in2;

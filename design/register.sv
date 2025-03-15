@@ -1,8 +1,8 @@
 //Prototype module for registers A-C.
-import constants::*
-import opcodes::*
 
 module register(input CLK, LOAD_REG, IN_DATA, output OUT_DATA);
+    import constants::*;
+    import opcodes::*;
     parameter WORD_SIZE = 19;
     logic CLK, LOAD_REG;
     logic [WORD_SIZE-1] IN_DATA, OUT_DATA, temp_data;

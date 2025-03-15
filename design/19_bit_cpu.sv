@@ -1,30 +1,98 @@
-import constants::*
-import opcodes::*
+module CPU (
+    input logic clk,
+    input logic reset,
+    control_bus_if.ctrl cpu_ctrl_if,
+    data_bus_if.data cpu_data_if,
+    address_bus_if.addr cpu_addr_if
+);
+    import constants::*;
+    import opcodes::*;
 
-module CPU_19_bit(input CLK, EN, we_IM, codein, immediate_addr, output za, zb, eq, gt, lt);
-    
-    reg za, zb, eq, gt, lt;
+    // Internal Signals
+    logic [WORD_SIZE:0] instruction;    // 20-bit fetched instruction
+    logic [OPCODE_SIZE - 1:0] opcode;
+    logic [4:0] reg_dst, reg_src1, reg_src2;
+    logic [3:0] imm_value;
+    logic mode;
+    logic [DATA_WIDTH-1:0] alu_result, mem_data;
+    logic [ADDR_WIDTH-1:0] pc_out, mem_addr;
 
-    wire [11:0] current_addr, address; 
-    wire [WORD_SIZE - 1:0] outIMd; 
-    wire [3:0] opcode;
-    wire load_IR, loadAd, loadBd, loadCd, moded, we_DMd, muxA_select, muxB_select, load_PC, inc_PC;
-    wire [11:0] execaddd; wire [WORD_SIZE - 1:0] dataAoutd; 
-    wire [WORD_SIZE - 1:0] dataBoutd; 
-    wire [2*(WORD_SIZE) - 1:0] outALUd, currdat, outDMd, dataCoutd;
-    wire zad, zbd, eqd, gtd, ltd;
+    // Program Counter
+    ProgramCounter pc (
+        .clk(clk),
+        .reset(reset),
+        .load(cpu_ctrl_if.LOAD_REG),
+        .inc(cpu_ctrl_if.INC_PC),
+        .in_address(mem_addr),
+        .out_address(pc_out)
+    );
 
-    external_memory instruction_memory #(parameter DATA_SIZE = 19) (.CLK(clk), .WR_EN(we_IM), .WR_DATA(codein), .ADDRESS(current_addr), .MEM_OUT(outIMd));
-    external_memory data_memory #(parameter DATA_SIZE = 38) (.CLK(clk), .WR_EN(we_IM), .WR_DATA(codein), .ADDRESS(current_addr), .MEM_OUT(outIMd));
-    inst_register   instr_reg (.CLK(clk), .LOAD_IR(load_IR), .INSTR(outIMd), .ADDRESS(addressd), .OPCODE(opcode));
-    control_unit    controller 	 (.CLK(clk), .EN(en), .OPCODE(opcode), .loadA(loadAd), .loadB(loadBd), .loadC(loadCd), .LOAD_IR(load_IR), .LOAD_PC(loadPCd), .INC_PC(incPCd), .MODE(moded), .WR_EN_DM(we_DMd), .selA(selAd), .selB(selBd));
-    program_counter 	PC (.CLK(clk), .LOAD_PC(load_PC), .INC_PC(inc_PC), .ADDRESS(address), .execadd(execaddd));
-    multiplexer	muxA (.clk(clk), .in1(execaddd), .in2(immediate_addr), .sel(muxA_select), .outB(current_addr));
-    multiplexer	muxB (.clk(clk), .in1(outALUd), .in2({4'b0000,immediate_addr}), .sel(muxB_select), .outA(currdat));
-    register 	reg_A #(parameter WORD_SIZE = 19) (.CLK(clk), .LOAD_REG(loadAd), .IN_DATA(outDMd[15:0]), .OUT_DATA(dataAoutd));
-    register 	reg_B #(parameter WORD_SIZE = 19) (.CLK(clk), .LOAD_REG(loadBd), .IN_DATA(outDMd[31:16]), .OUT_DATA(dataBoutd));
-    register	reg_C #(parameter WORD_SIZE = 19) (.CLK(clk), .LOAD_REG(loadCd), .IN_DATA(currdat), .OUT_DATA(dataCoutd));
-    
-    arith_logic_unit ALU (.OPCODE(opcode), .OP_1(), .OP_2(), .MODE(moded), .outALU(outALUd));
+    // Instruction Memory
+    InstructionMemory imem (
+        .clk(clk),
+        .addr(pc_out),
+        .data_out(instruction)
+    );
+
+    // Instruction Register
+    InstructionRegister ir (
+        .clk(clk),
+        .reset(reset),
+        .load(cpu_ctrl_if.ENABLE),
+        .instr_in(instruction),
+        .opcode(opcode),
+        .reg_dst(reg_dst),
+        .reg_src1(reg_src1),
+        .reg_src2(reg_src2),
+        .imm_value(imm_value),
+        .mode(mode)
+    );
+
+    // Register File
+    RegisterFile regfile (
+        .clk(clk),
+        .reset(reset),
+        .load(cpu_ctrl_if.LOAD_REG),
+        .src1(reg_src1),
+        .src2(reg_src2),
+        .dst(reg_dst),
+        .data_in(alu_result),
+        .data_out1(cpu_data_if.data1),
+        .data_out2(cpu_data_if.data2)
+    );
+
+    // ALU
+    ALU alu (
+        .opcode(opcode),
+        .mode(mode),
+        .operand1(cpu_data_if.data1),
+        .operand2(mode ? {12'b0, imm_value} : cpu_data_if.data2), // Select Register or Immediate
+        .result(alu_result),
+        .flags(cpu_ctrl_if.FLAGS)
+    );
+
+    // Data Memory
+    DataMemory dmem (
+        .clk(clk),
+        .addr(cpu_addr_if.address),
+        .data_in(cpu_data_if.data1),
+        .data_out(mem_data),
+        .read(cpu_ctrl_if.RD_EN),
+        .write(cpu_ctrl_if.WR_EN)
+    );
+
+    // Control Unit (Handles RDFE Cycle)
+    ControlUnit cu (
+        .clk(clk),
+        .reset(reset),
+        .opcode(opcode),
+        .enable(cpu_ctrl_if.ENABLE),
+        .rd_en(cpu_ctrl_if.RD_EN),
+        .wr_en(cpu_ctrl_if.WR_EN),
+        .inc_pc(cpu_ctrl_if.INC_PC),
+        .load_reg(cpu_ctrl_if.LOAD_REG),
+        .mode(cpu_ctrl_if.MODE),
+        .flags(cpu_ctrl_if.FLAGS)
+    );
 
 endmodule

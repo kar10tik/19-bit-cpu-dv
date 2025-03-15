@@ -1,5 +1,5 @@
-import constants::*
-import opcodes::*
+import constants::*;
+import opcodes::*;
 
 module arithmetic_unit(input opcode, operand_1, operand_2, output out);
     logic [WORD_SIZE-1:0] operand_1, operand_2, out;

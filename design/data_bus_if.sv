@@ -1,6 +1,5 @@
-import constants::*
-
 interface data_bus_if;
+    import constants::*;
     logic [WORD_SIZE-1:0] data_in;
     logic [WORD_SIZE-1:0] data_out;
 

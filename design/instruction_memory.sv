@@ -1,4 +1,4 @@
-import constants::*
+import constants::*;
 
 module instruction_memory (
     input logic clk,
@@ -7,6 +7,7 @@ module instruction_memory (
     output logic [WORD_SIZE-1:0] instruction
 );
 
+import constants::*;
 logic [WORD_SIZE-1:0] mem [0:1023]; 
 
 always_ff @(posedge clk) begin

@@ -1,6 +1,5 @@
-import constants::*
-
 interface address_bus_if;
+    import constants::*;
     logic [ADDR_SIZE-1:0] in_address;
     logic [ADDR_SIZE-1:0] out_address;
 

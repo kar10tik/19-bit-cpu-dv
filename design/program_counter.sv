@@ -1,7 +1,6 @@
-`include "constants.svh"
+module program_counter(input CLK, control_bus_if.PC pc_ctrl_if, address_bus_if.pc addr_if, output execadd);
 
-module program_counter(input CLK, control_bus_if.PC pc_ctrl_if, address_bus_if addr_if, output execadd);
-
+import constants::*;
 always_ff @(posedge CLK)
 begin
 	if (pc_ctrl_if.LOAD_REG == 0 && pc_ctrl_if.LOAD_SELECT == LOAD_PC)

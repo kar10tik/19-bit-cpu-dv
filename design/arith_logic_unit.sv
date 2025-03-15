@@ -1,6 +1,4 @@
 `timescale 1ns / 1ps
-import constants::*
-import opcodes::*
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -26,7 +24,9 @@ module arith_logic_unit(input OPCODE, OP_1, OP_2,
 output out
 
     );
-    import alu_opcodes::*;
+    import constants::*;
+    import opcodes::*;
+    
     logic OPCODE[4:0], OP_1[4:0], OP_2[4:0];
     logic [4:0] out;
     

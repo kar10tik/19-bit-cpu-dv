@@ -1,7 +1,8 @@
-`include "constants.svh"
+
 
 module inst_register (input CLK, control_bus_if IR_ctrl_if, INSTR, output ADDRESS, OPCODE);
-	bit CLK;
+	import contants::*;
+    bit CLK;
 	input [WORD_SIZE - 1:0] INSTR;
 	logic [11:0] ADDRESS;
 	logic [15:0] temp;

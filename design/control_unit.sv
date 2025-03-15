@@ -1,9 +1,8 @@
-import constants::*
-import opcodes::*
-
 module control_unit(input CLK, control_bus_if.CU ctrl_bus_if);
 //EN, OPCODE, output MODE, LOAD_IR, LOAD_PC, INC_PC, WR_EN_DM);
-
+   import constants::*;
+   import opcodes::*;
+   
    typedef enum logic [1:0] {
         RESET = 2'b00,
         FETCH = 2'b01,
@@ -77,7 +76,22 @@ module control_unit(input CLK, control_bus_if.CU ctrl_bus_if);
 
                   end
 
+                  ADD: begin
 
+                  end
+
+                  SUB: begin
+
+                  end
+
+                  INC: begin
+
+                  end
+
+                  DEC: begin
+
+                  end
+                  
                endcase
             end
 
