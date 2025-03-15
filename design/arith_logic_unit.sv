@@ -20,32 +20,41 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module arith_logic_unit(input OPCODE, OP_1, OP_2, 
-output out
+module arith_logic_unit (
+    input logic clk,
+    input logic reset,
+    input logic [WORD_SIZE-1:0] reg_data_1, reg_data_2,  // Operand inputs
+    output logic [WORD_SIZE-1:0] result,  // ALU result output
 
-    );
+    // Interfaces
+    control_bus_if.ALU ALU_control,  
+    data_bus_if.ALU ALU_data  
+);
     import constants::*;
     import opcodes::*;
-    
-    logic OPCODE[4:0], OP_1[4:0], OP_2[4:0];
-    logic [4:0] out;
-    
-    arithmetic_unit arithmetic_logic1();
-    
-    always_comb begin : ALU_operations
-        case (OPCODE)
-            NOT: NOT_function();
-            AND: AND_function();
-            OR: OR_function();
-            XOR: XOR_function();
-            ADD: ADD_function();
-            SUB: SUB_function();
-            MUL: MUL_function();
-            DIV: DIV_function();
-            INC: INC_function();
-            DEC: DEC_function();
-            default: $display("Invalid OPCODE!");
+
+    // Instantiate Arithmetic and Logical Units
+    arithmetic_unit ARITHMETIC (
+        .opcode(ALU_control.OPCODE),
+        .operand_1(reg_data_1),
+        .operand_2(reg_data_2),
+        .out(result)
+    );
+
+    logical_unit LOGIC (
+        .opcode(ALU_control.OPCODE),
+        .operand_1(reg_data_1),
+        .operand_2(reg_data_2),
+        .out(result)
+    );
+
+    // Select between Arithmetic and Logic operations
+    always_comb begin
+        case (ALU_control.OPCODE)
+            NOT, AND, OR, XOR: result = LOGIC.out;  // Logic operations
+            ADD, SUB, MUL, DIV, INC, DEC: result = ARITHMETIC.out;  // Arithmetic operations
+            default: result = 0;
         endcase
     end
-     
+
 endmodule
