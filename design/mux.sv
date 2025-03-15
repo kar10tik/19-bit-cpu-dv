@@ -1,10 +1,9 @@
-module param_mux
-#(parameter N = 2)
+module multiplexer #(parameter N = 2)
 (
-   input  logic [3:0] i_data [N-1:0],
-   input  logic [2:0] sel, //the select pin is fixed at 3 bits since maximum N will be 8
-   output logic [3:0] o_data
+   input  logic [3:0] input [N-1:0],
+   input  logic [2:0] select_line, //the select pin is fixed at 3 bits since maximum N will be 8
+   output logic [3:0] output
 );
-   assign o_data = i_data[sel];
+   assign output = input[select_line];
 
 endmodule

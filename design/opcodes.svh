@@ -29,5 +29,7 @@ package opcodes;
     localparam FFT = 5'b10011;
     localparam ENC = 5'b10100;
     localparam DCR = 5'b10101;
+
+    export opcodes::*; //Make opcodes directly visible where opcodes is imported 
     
 endpackage

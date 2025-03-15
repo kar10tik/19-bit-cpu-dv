@@ -1,7 +1,8 @@
+`include "constants.svh"
+
 module arithmetic_unit(input opcode, operand_1, operand_2, output out);
-    parameter WORD_SIZE = 19;
     logic [WORD_SIZE-1:0] operand_1, operand_2, out;
-    logic [4:0] opcode;
+    logic [OPCODE_SIZE - 1:0] opcode;
     logical_unit logic1(.opcode(opcode), .operand_1(operand_1), .operand_2(operand_2), .out(out));
 
     function logic[WORD_SIZE-1:0] ADD_function(logic [WORD_SIZE-1:0] in1, [WORD_SIZE-1:0] in2);
