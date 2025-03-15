@@ -1,17 +1,18 @@
-module inst_register (input CLK, LOAD_IR, INSTR, output ADDRESS, OPCODE);
-	localparam WORD_SIZE = 19; 
-	bit CLK, LOAD_IR;
+`include "constants.svh"
+
+module inst_register (input CLK, control_bus_if IR_ctrl_if, INSTR, output ADDRESS, OPCODE);
+	bit CLK;
 	input [WORD_SIZE - 1:0] INSTR;
 	logic [11:0] ADDRESS;
-	logic [5:0] OPCODE;
 	logic [15:0] temp;
 
-	always@(posedge CLK)
-	begin
-		if(LOAD_IR == 1) begin
-			temp <= INSTR;
-		end
-	ADDRESS <= temp[11:0];
-	OPCODE <= temp[15:12];
-	end
+	always_ff @(posedge CLK)
+    begin
+        if (IR_ctrl_if.LOAD_REG && IR_ctrl_if.LOAD_SELECT == LOAD_IR) 
+        begin
+            temp <= INSTR;
+        end
+        IR_ctrl_if.OPCODE <= temp[15:12];
+        addr_if.out_address <= temp[11:0]; // Send address operand
+    end
 endmodule

@@ -1,8 +1,8 @@
-`include "constants.svh"
-`include "opcodes.svh"
+import constants::*
+import opcodes::*
 
 module CPU_19_bit(input CLK, EN, we_IM, codein, immediate_addr, output za, zb, eq, gt, lt);
-    localparam WORD_SIZE = 19;
+    
     reg za, zb, eq, gt, lt;
 
     wire [11:0] current_addr, address; 

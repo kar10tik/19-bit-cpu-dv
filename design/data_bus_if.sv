@@ -1,4 +1,4 @@
-`include "constants.svh"
+import constants::*
 
 interface data_bus_if;
     logic [WORD_SIZE-1:0] data_in;
