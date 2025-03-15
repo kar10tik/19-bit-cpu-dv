@@ -14,4 +14,4 @@ localparam LOAD_REG_C = 3'b100;
 
 export constants::*;
 
-endpackage
+endpackage: constants
