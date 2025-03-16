@@ -28,8 +28,10 @@ module control_unit(
         // Default control signals
         ctrl_bus_if.LOAD_REG = 0;
         ctrl_bus_if.INC_PC = 0;
-        ctrl_bus_if.WR_EN = 0;
-        ctrl_bus_if.RD_EN = 0;
+        ctrl_bus_if.WR_EN_DM = 0;
+        ctrl_bus_if.RD_EN_DM = 0;
+        ctrl_bus_if.WR_EN_IM = 0;
+        ctrl_bus_if.RD_EN_IM = 0;
         ctrl_bus_if.LOAD_SELECT = 1'b0;
         ctrl_bus_if.MUX_SELECT_A = 0;
         ctrl_bus_if.MUX_SELECT_B = 0;
@@ -123,7 +125,7 @@ module control_unit(
 
                     // Memory Instructions
                     LD: begin
-                        ctrl_bus_if.RD_EN = 1;
+                        ctrl_bus_if.RD_EN_DM = 1;
                         ctrl_bus_if.LOAD_REG = 1;
                         ctrl_bus_if.LOAD_SELECT = LOAD_REG_A; // Load data into Register A
                         next_state = EXECUTE_STATE;
@@ -147,7 +149,7 @@ module control_unit(
 
                     LD, ST: begin
                         ctrl_bus_if.WR_EN = 0;
-                        ctrl_bus_if.RD_EN = 0;
+                        ctrl_bus_if.RD_EN_DM = 0;
                     end
 
                     default: ;

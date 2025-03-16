@@ -21,12 +21,9 @@
 
 
 module arith_logic_unit (
-    input logic clk,
-    input logic reset,
+    input logic clk, reset,
     input logic [WORD_SIZE-1:0] reg_data_1, reg_data_2,  // Operand inputs
     output logic [WORD_SIZE-1:0] result,  // ALU result output
-
-    // Interfaces
     control_bus_if.ALU ALU_control,  
     data_bus_if.ALU ALU_data  
 );

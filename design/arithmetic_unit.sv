@@ -1,5 +1,5 @@
 module arithmetic_unit (
-    input logic [4:0] opcode, // 5-bit opcode
+    input logic [OPCODE_SIZE-1:0] opcode, // 5-bit opcode
     input logic [WORD_SIZE-1:0] operand_1, operand_2, // 19-bit operands
     output logic [WORD_SIZE-1:0] out // 19-bit result
 );

@@ -2,8 +2,10 @@ import constants::*;
 
 interface control_bus_if;
     logic ENABLE; //Enable signal for control unit
-    logic RD_EN; //Read enable
-    logic WR_EN; //Write enable
+    logic RD_EN_DM; //Read enable for data memory
+    logic WR_EN_DM; //Write enable for data memory
+    logic RD_EN_IM; //Read enable for instruction memory
+    logic WR_EN_IM; //Write enable for instruction memory
     logic INC_PC; //Program counter increment
     logic LOAD_REG; //Load register
     logic LOAD_SELECT; //Select which register to load: 000 for PC, 001 for IR, 010 for RegA, 011 for RegB, 100 for RegC
