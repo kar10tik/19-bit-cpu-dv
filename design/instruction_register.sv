@@ -1,11 +1,7 @@
-
-
-module inst_register (input CLK, control_bus_if IR_ctrl_if, INSTR, output ADDRESS, OPCODE);
+module instruction_register (input CLK, control_bus_if IR_ctrl_if, inout address_bus_if IR_addr_if, OPCODE);
 	import contants::*;
-    bit CLK;
-	input [WORD_SIZE - 1:0] INSTR;
-	logic [11:0] ADDRESS;
-	logic [15:0] temp;
+    logic CLK;
+	logic [WORD_SIZE-1:0] temp;
 
 	always_ff @(posedge CLK)
     begin
@@ -14,6 +10,6 @@ module inst_register (input CLK, control_bus_if IR_ctrl_if, INSTR, output ADDRES
             temp <= INSTR;
         end
         IR_ctrl_if.OPCODE <= temp[15:12];
-        addr_if.out_address <= temp[11:0]; // Send address operand
+        IR_addr_if.out_address <= temp[11:0]; // Send address operand
     end
 endmodule

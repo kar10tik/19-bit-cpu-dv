@@ -15,7 +15,7 @@ Signals are separated into three buses:
 - **Data Bus** → Transfers operand and result data
 - **Address Bus** → Determines memory locations
 
-Since using standard 8-bit-byte- and 16-bit-word-addressable memories would waste space for 19-bit words, the memories modeled are 19-bit-word addressable. The control unit is pipelined execution with an RDFE state machine: Reset, Decode, Fetch, Execute.
+Since using standard 8-bit-byte- and 16-bit-word-addressable memories would waste space for 19-bit words, the memories modeled are 19-bit-word addressable. The control unit is pipelined with an RDFE state machine: Reset, Decode, Fetch, Execute.
 
 ---
 
