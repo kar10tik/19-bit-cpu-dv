@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
-module logical_unit_tb();
+
+module logical_unit_tb;
     import constants::*;
     import opcodes::*;
 
