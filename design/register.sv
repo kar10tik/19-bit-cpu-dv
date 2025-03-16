@@ -1,22 +1,30 @@
 //Prototype module for registers A-C.
 
-module register(input CLK, LOAD_REG, IN_DATA, output OUT_DATA);
+module register(input logic CLK, control_bus_if reg_ctrl_if, inout data_bus_if.register reg_data_if);
     import constants::*;
     import opcodes::*;
-    parameter WORD_SIZE = 19;
-    logic CLK, LOAD_REG;
-    logic [WORD_SIZE-1] IN_DATA, OUT_DATA, temp_data;
+
+    logic [2:0] [WORD_SIZE-1:0] register_file;
 
     always_ff @ (posedge CLK)
     begin   
-        if (LOAD_REG == 1) 
+        if (reg_ctrl_if.LOAD_REG == 1) 
         begin
-            OUT_DATA <= IN_DATA;
-            temp_data <= IN_DATA;
+            case (reg_ctrl_if.LOAD_SELECT)
+                LOAD_REG_A: register_file[REG_A] <= reg_data_if.data_in;
+                LOAD_REG_B: register_file[REG_B] <= reg_data_if.data_in;
+                LOAD_REG_C: register_file[REG_C] <= reg_data_if.data_in;
+                default: ;
+            endcase
         end
-        else if (LOAD_REG == 0) 
+        else if (reg_ctrl_if.LOAD_REG == 0) 
         begin
-            OUT_DATA <= temp_data;
+            case (reg_ctrl_if.LOAD_SELECT)
+                LOAD_REG_A: reg_data_if.data_out <= register_file[REG_A];
+                LOAD_REG_B: reg_data_if.data_out <= register_file[REG_B];
+                LOAD_REG_C: reg_data_if.data_out <= register_file[REG_C];
+                default: ;
+            endcase
         end
     end
 

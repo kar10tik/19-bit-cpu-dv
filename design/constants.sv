@@ -12,6 +12,10 @@ localparam LOAD_REG_A = 3'b010;
 localparam LOAD_REG_B = 3'b011;
 localparam LOAD_REG_C = 3'b100;
 
+localparam REG_A = 2'b00;
+localparam REG_B = 2'b01;
+localparam REG_C = 2'b10;
+
 export constants::*;
 
 endpackage: constants
