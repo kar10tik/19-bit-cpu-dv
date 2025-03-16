@@ -22,36 +22,37 @@
 
 module arith_logic_unit (
     input logic clk, reset,
+    input control_bus_if.ALU ALU_control,  
+    input data_bus_if.alu ALU_data,  
     input logic [WORD_SIZE-1:0] reg_data_1, reg_data_2,  // Operand inputs
-    output logic [WORD_SIZE-1:0] result,  // ALU result output
-    control_bus_if.ALU ALU_control,  
-    data_bus_if.ALU ALU_data  
+    output logic [WORD_SIZE-1:0] result  // ALU result output
 );
     import constants::*;
     import opcodes::*;
 
+    logic [WORD_SIZE-1:0] arith_result, logic_result;
+
     // Instantiate Arithmetic and Logical Units
-    arithmetic_unit ARITHMETIC (
-        .opcode(ALU_control.OPCODE),
+    arithmetic_unit AU (
+        .ctrl_bus_if(ALU_control),
         .operand_1(reg_data_1),
         .operand_2(reg_data_2),
-        .out(result)
+        .out(arith_result)
     );
 
-    logical_unit LOGIC (
-        .opcode(ALU_control.OPCODE),
+    logical_unit LU (
+        .ctrl_bus_if(ALU_control),
         .operand_1(reg_data_1),
         .operand_2(reg_data_2),
-        .out(result)
+        .out(logic_result)
     );
 
-    // Select between Arithmetic and Logic operations
+    // Select between Arithmetic and Logic operations based on MODE signal
     always_comb begin
-        case (ALU_control.OPCODE)
-            NOT, AND, OR, XOR: result = LOGIC.out;  // Logic operations
-            ADD, SUB, MUL, DIV, INC, DEC: result = ARITHMETIC.out;  // Arithmetic operations
-            default: result = 0;
-        endcase
+        if (ALU_control.MODE) 
+            result = logic_result;  // Logical operations
+        else 
+            result = arith_result;  // Arithmetic operations
     end
 
 endmodule

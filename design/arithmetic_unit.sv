@@ -1,5 +1,5 @@
 module arithmetic_unit (
-    input logic [OPCODE_SIZE-1:0] opcode, // 5-bit opcode
+    input control_bus_if.ALU ctrl_bus_if, // 5-bit opcode
     input logic [WORD_SIZE-1:0] operand_1, operand_2, // 19-bit operands
     output logic [WORD_SIZE-1:0] out // 19-bit result
 );
@@ -27,21 +27,20 @@ module arithmetic_unit (
         return ADD_function(in1, ADD_function(~in2, 1)); // Two’s complement subtraction
     endfunction
 
-
-    // Function for Multiplication (Shift-and-Add Algorithm)
+    // Function for Multiplication
     function logic [WORD_SIZE-1:0] MUL_function(input logic [WORD_SIZE-1:0] in1, in2);
         logic [WORD_SIZE-1:0] result;
         result = 0;
         while (in2 != 0) begin
-            if (in2[0])  // Check LSB
+            if (in2[0])  
                 result = result + in1;
-            in1 = in1 << 1; // Shift left (multiply by 2)
-            in2 = in2 >> 1; // Shift right (divide by 2)
+            in1 = in1 << 1; 
+            in2 = in2 >> 1;
         end
         return result;
     endfunction
 
-    // Function for Division (Binary Long Division)
+    // Function for Division
     function logic [WORD_SIZE-1:0] DIV_function(input logic [WORD_SIZE-1:0] in1, in2);
         logic [WORD_SIZE-1:0] quotient, remainder;
         quotient = 0;
@@ -56,27 +55,26 @@ module arithmetic_unit (
         return quotient;
     endfunction
 
-    // Function for Increment
+    // Increment
     function logic [WORD_SIZE-1:0] INC_function(input logic [WORD_SIZE-1:0] in1);
         return in1 + 1;
     endfunction
 
-    // Function for Decrement
+    // Decrement
     function logic [WORD_SIZE-1:0] DEC_function(input logic [WORD_SIZE-1:0] in1);
         return in1 - 1;
     endfunction
 
-    // Always block to select operation based on opcode
+    // Opcode Execution
     always_comb begin
-        case (opcode)
+        case (ctrl_bus_if.OPCODE)
             ADD: out = ADD_function(operand_1, operand_2);
             SUB: out = SUB_function(operand_1, operand_2);
             MUL: out = MUL_function(operand_1, operand_2);
             DIV: out = DIV_function(operand_1, operand_2);
             INC: out = INC_function(operand_1);
             DEC: out = DEC_function(operand_1);
-            default: out = 0; // Default case (NOP)
+            default: out = 0; 
         endcase
     end
-
 endmodule
