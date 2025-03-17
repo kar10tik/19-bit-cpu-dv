@@ -2,6 +2,7 @@ import constants::*;
 
 interface control_bus_if;
     logic ENABLE; //Enable signal for control unit
+    logic RESET; //RESET signal for PC, CU, and other components
     logic RD_EN_DM; //Read enable for data memory
     logic WR_EN_DM; //Write enable for data memory
     logic RD_EN_IM; //Read enable for instruction memory

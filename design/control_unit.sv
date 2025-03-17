@@ -15,13 +15,13 @@ module control_unit(
 
     state_t current_state, next_state;
 
-    // State transition logic
-    always_ff @(posedge CLK) begin: state_logic
-      if (!EN)
-         current_state <= RESET_STATE;
-      else
-         current_state <= next_state;
-   end
+    // State transition logic with asynchronous reset
+    always_ff @(posedge CLK or posedge ctrl_bus_if.RESET) begin
+        if (ctrl_bus_if.RESET)
+            current_state <= RESET_STATE;
+        else
+            current_state <= next_state;
+    end
 
     // Control signal logic
     always_comb begin : output_logic

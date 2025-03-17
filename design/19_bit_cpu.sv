@@ -20,54 +20,47 @@ module CPU (
 
     // Program Counter
     ProgramCounter pc (
-        .clk(clk),
-        .reset(reset),
-        .ctrl_bus_if(cpu_ctrl_if),
-        .address_bus_if(cpu_addr_if)
+        .CLK(clk),
+        .RESET(reset),
+        .pc_ctrl_if(cpu_ctrl_if),
+        .addr_if(cpu_addr_if)
     );
 
     // Instruction Memory
     InstructionMemory imem (
-        .clk(clk),
-        .addr_bus_if(cpu_addr_if)
+        .CLK(clk),
+        .ctrl_bus_if(cpu_ctrl_if),
+        .addr_bus_if(cpu_addr_if),
+        .instruction(instruction)
     );
 
     // Instruction Register
     InstructionRegister ir (
-        .clk(clk),
-        .ctrl_bus_if(cpu_ctrl_if),
-        .instr_in(instruction),
-        .opcode(opcode),
-        .reg_dst(reg_dst),
-        .reg_src1(reg_src1),
-        .reg_src2(reg_src2),
-        .imm_value(imm_value),
-        .mode(mode)
+        .CLK(clk),
+        .IR_ctrl_if(cpu_ctrl_if),
+        .IR_addr_if(cpu_addr_if),
     );
 
     // Register File
-    RegisterFile regfile (
-        .clk(clk),
-        .ctrl_bus_if(cpu_ctrl_if),
-        .src1(reg_src1),
-        .src2(reg_src2),
-        .dst(reg_dst),
-        .data_in(alu_result),
-        .data_bus_if(cpu_data_if.data1)
+    register regfile (
+        .CLK(clk),
+        .reg_ctrl_if(cpu_ctrl_if),
+        .reg_data_if(cpu_data_if.data1)
     );
 
     // ALU
-    ALU alu (
-        .ctrl_bus_if(cpu_ctrl_if),
-        .data_bus_if(cpu_data_if),
+    arith_logic_unit alu (
+        .CLK(clk),
+        .ALU_control(cpu_ctrl_if),
+        .ALU_data(cpu_data_if),
         .operand1(cpu_data_if.data1),
-        .operand2(mode ? {12'b0, imm_value} : cpu_data_if.data2), // Select Register or Immediate
+        .operand2(mode ? {12'b0, imm_value} : cpu_data_if.data2), // FIX! Select Register or Immediate
         .result(alu_result),
     );
 
     // Data Memory
-    DataMemory dmem (
-        .clk(clk),
+    data_memory dmem (
+        .CLK(clk),
         .addr_bus_if(cpu_addr_if),
         .data_bus_if(cpu_data_if),
         .ctrl_bus_if(cpu_ctrl_if)

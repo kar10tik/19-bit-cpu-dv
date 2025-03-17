@@ -21,7 +21,7 @@
 
 
 module arith_logic_unit (
-    input logic clk, reset,
+    input logic CLK, RESET,
     input control_bus_if.ALU ALU_control,  
     input data_bus_if.alu ALU_data,  
     input logic [WORD_SIZE-1:0] reg_data_1, reg_data_2,  // Operand inputs

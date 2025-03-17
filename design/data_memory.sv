@@ -10,10 +10,12 @@ module data_memory (
 import constants::*;
 logic [WORD_SIZE - 1:0] mem [0:1023];
 
-always_ff @(posedge clk) begin
-    if (ctrl_bus_if.WR_EN_DM)
+always_ff @(posedge clk or ctrl_bus_if.RESET) begin
+    if (ctrl_bus_if.RESET)
+        mem <= '{default: '0};
+    else if (ctrl_bus_if.WR_EN_DM)
         mem[addr_bus_if.address] <= data_bus_if.data_in;
-    if (ctrl_bus_if.RD_EN_DM)
+    else if (ctrl_bus_if.RD_EN_DM)
         data_bus_if.data_out <= mem[addr_bus_if.address];
 end
 
