@@ -1,3 +1,4 @@
+//MODIFICATIONS PENDING
 module CPU (
     input logic clk,
     input logic reset,
@@ -9,13 +10,13 @@ module CPU (
     import opcodes::*;
 
     // Internal Signals
-    logic [WORD_SIZE:0] instruction;    // 20-bit fetched instruction
+    logic [WORD_SIZE - 1:0] instruction;    // 19-bit fetched instruction
     logic [OPCODE_SIZE - 1:0] opcode;
     logic [4:0] reg_dst, reg_src1, reg_src2;
     logic [3:0] imm_value;
     logic mode;
-    logic [DATA_WIDTH-1:0] alu_result, mem_data;
-    logic [ADDR_WIDTH-1:0] pc_out, mem_addr;
+    logic [WORD_SIZE-1:0] alu_result, mem_data;
+    logic [ADDR_SIZE-1:0] pc_out, mem_addr;
 
     // Program Counter
     ProgramCounter pc (
@@ -77,11 +78,11 @@ module CPU (
         .addr(cpu_addr_if.address),
         .data_in(cpu_data_if.data1),
         .data_out(mem_data),
-        .read(cpu_ctrl_if.RD_EN),
-        .write(cpu_ctrl_if.WR_EN)
+        .read(cpu_ctrl_if.RD_EN_DM),
+        .write(cpu_ctrl_if.WR_EN_DM)
     );
 
-    // Control Unit (Handles RDFE Cycle)
+    // Control Unit
     ControlUnit cu (
         .clk(clk),
         .reset(reset),
