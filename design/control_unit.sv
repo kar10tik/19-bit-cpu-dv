@@ -1,5 +1,5 @@
 module control_unit(
-   input logic CLK, 
+   RCC_if.rcc cu_rcc_if, 
    control_bus_if.CU ctrl_bus_if);
 
     import constants::*;
@@ -16,7 +16,7 @@ module control_unit(
     state_t current_state, next_state;
 
     // State transition logic with asynchronous reset
-    always_ff @(posedge CLK or posedge ctrl_bus_if.RESET) begin
+    always_ff @(posedge cu_rcc_if.CLK or posedge cu_rcc_if.RESET) begin
         if (ctrl_bus_if.RESET)
             current_state <= RESET_STATE;
         else

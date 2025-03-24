@@ -1,12 +1,12 @@
 //Prototype module for registers A-C.
 
-module register(input logic CLK, control_bus_if reg_ctrl_if, inout data_bus_if.register reg_data_if);
+module register(RCC_if.rcc reg_rcc_if, control_bus_if reg_ctrl_if, data_bus_if.reg_data reg_data_if);
     import constants::*;
     import opcodes::*;
 
     logic [2:0] [WORD_SIZE-1:0] register_file;
 
-    always_ff @ (posedge CLK)
+    always_ff @ (posedge reg_rcc_if.CLK)
     begin   
         if (reg_ctrl_if.LOAD_REG == 1) 
         begin

@@ -1,5 +1,5 @@
 module instruction_register (
-    input CLK, 
+    RCC_if.rcc ir_rcc_if, 
     control_bus_if IR_ctrl_if, 
     inout address_bus_if IR_addr_if
 );
@@ -8,7 +8,7 @@ module instruction_register (
     logic CLK;
 	logic [WORD_SIZE-1:0] temp;
 
-	always_ff @(posedge CLK)
+	always_ff @(posedge ir_rcc_if.CLK)
     begin
         if (IR_ctrl_if.LOAD_REG && IR_ctrl_if.LOAD_SELECT == LOAD_IR) 
         begin

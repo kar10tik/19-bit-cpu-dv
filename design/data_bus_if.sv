@@ -8,7 +8,7 @@ interface data_bus_if;
         output data_out
     );
 
-    modport register (
+    modport reg_data (
         output data_in,
         input data_out
     );

@@ -1,9 +1,9 @@
-module program_counter(input logic CLK, RESET, control_bus_if.PC pc_ctrl_if, address_bus_if.pc addr_if);
+module program_counter(RCC_if.rcc pc_rcc_if, control_bus_if.PC pc_ctrl_if, address_bus_if.pc addr_if);
 
 import constants::*;
-always_ff @(posedge CLK or posedge ctrl_bus_if.RESET) 
+always_ff @(posedge pc_rcc_if.CLK or posedge pc_rcc_if.RESET) 
 begin
-	if  (ctrl_bus_if.RESET)
+	if (pc_rcc_if.RESET)
 	begin
 		addr_if.out_address <= 'h0;
 	end

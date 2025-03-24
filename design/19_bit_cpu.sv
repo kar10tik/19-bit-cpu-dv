@@ -1,7 +1,6 @@
 //MODIFICATIONS PENDING
 module CPU (
-    input logic clk,
-    input logic reset,
+    RCC_if.rcc cpu_rcc_if,
     control_bus_if.ctrl cpu_ctrl_if,
     data_bus_if.data cpu_data_if,
     address_bus_if.addr cpu_addr_if
@@ -19,56 +18,55 @@ module CPU (
     logic [ADDR_SIZE-1:0] pc_out, mem_addr;
 
     // Program Counter
-    ProgramCounter pc (
-        .CLK(clk),
+    program_counter pc (
+        .pc_rcc_if(cpu_rcc_if),
         .RESET(reset),
         .pc_ctrl_if(cpu_ctrl_if),
         .addr_if(cpu_addr_if)
     );
 
     // Instruction Memory
-    InstructionMemory imem (
-        .CLK(clk),
+    instruction_memory imem (
+        .im_rcc_if(cpu_rcc_if),
         .ctrl_bus_if(cpu_ctrl_if),
         .addr_bus_if(cpu_addr_if),
-        .instruction(instruction)
+        .instruction(instruction) //FIXME
     );
 
     // Instruction Register
-    InstructionRegister ir (
-        .CLK(clk),
+    instruction_register ir (
+        .ir_rcc_if(cpu_rcc_if),
         .IR_ctrl_if(cpu_ctrl_if),
-        .IR_addr_if(cpu_addr_if),
+        .IR_addr_if(cpu_addr_if)
     );
 
     // Register File
     register regfile (
-        .CLK(clk),
+        .reg_rcc_if(cpu_rcc_if),
         .reg_ctrl_if(cpu_ctrl_if),
-        .reg_data_if(cpu_data_if.data1)
+        .reg_data_if(cpu_data_if)
     );
 
     // ALU
     arith_logic_unit alu (
-        .CLK(clk),
         .ALU_control(cpu_ctrl_if),
         .ALU_data(cpu_data_if),
         .operand1(cpu_data_if.data1),
-        .operand2(mode ? {12'b0, imm_value} : cpu_data_if.data2), // FIX! Select Register or Immediate
-        .result(alu_result),
+        .operand2(mode ? {12'b0, imm_value} : cpu_data_if.data2), // FIXME Select Register or Immediate
+        .result(alu_result)
     );
 
     // Data Memory
     data_memory dmem (
-        .CLK(clk),
+        .dmem_rcc_if(cpu_rcc_if),
         .addr_bus_if(cpu_addr_if),
         .data_bus_if(cpu_data_if),
         .ctrl_bus_if(cpu_ctrl_if)
     );
 
     // Control Unit
-    ControlUnit cu (
-        .clk(clk),
+    control_unit cu (
+        .cu_rcc_if(cpu_rcc_if),
         .ctrl_bus_if(cpu_ctrl_if)
     );
 
