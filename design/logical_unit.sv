@@ -1,5 +1,5 @@
 module logical_unit (
-    input control_bus_if.ALU ctrl_bus_if,
+    control_bus_if.ALU ctrl_bus,
     input logic [WORD_SIZE-1:0] operand_1, operand_2,
     output logic [WORD_SIZE-1:0] out
 );
@@ -28,7 +28,7 @@ module logical_unit (
 
     // Opcode Execution
     always_comb begin
-        case (ctrl_bus_if.OPCODE)
+        case (ctrl_bus.OPCODE)
             AND: out = AND_function(operand_1, operand_2);
             OR:  out = OR_function(operand_1, operand_2);
             XOR: out = XOR_function(operand_1, operand_2);

@@ -9,13 +9,17 @@ interface control_bus_if;
     bit INC_PC; //Program counter increment
     bit LOAD_REG; //Load register
     bit LOAD_SELECT; //Select which register to load: 000 for PC, 001 for IR, 010 for RegA, 011 for RegB, 100 for RegC
-    bit [OPCODE_SIZE-1:0] OPCODE; //
-    bit [3:0] FLAGS; //ALU flags
+    bit [OPCODE_SIZE - 1:0] OPCODE; //
+    bit [FLAG_REG_SIZE - 1:0] FLAGS; //ALU flags
     bit MODE; //ALU mode
     bit MUX_SELECT_A, MUX_SELECT_B; //MUX select signals
 
-    modport memory(
-        input RD_EN, WR_EN
+    modport imem(
+        input RD_EN_IM, WR_EN_IM
+    );
+
+    modport dmem(
+        input RD_EN_DM, WR_EN_DM
     );
 
     modport PC(

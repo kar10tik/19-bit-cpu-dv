@@ -1,20 +1,21 @@
 module instruction_register (
-    RCC_if.rcc ir_rcc_if, 
-    control_bus_if IR_ctrl_if, 
-    inout address_bus_if IR_addr_if
+    RCC_if.rcc rcc_bus, 
+    control_bus_if ctrl_bus, 
+    address_bus_if addr_bus,
+    instruction_bus_if.ireg instruction_bus
 );
 
 	import contants::*;
     logic CLK;
-	logic [WORD_SIZE-1:0] temp;
+	logic [WORD_SIZE-1:0] instr;
 
-	always_ff @(posedge ir_rcc_if.CLK)
+	always_ff @(posedge rcc_bus.CLK)
     begin
-        if (IR_ctrl_if.LOAD_REG && IR_ctrl_if.LOAD_SELECT == LOAD_IR) 
+        if (ctrl_bus.LOAD_REG && ctrl_bus.LOAD_SELECT == LOAD_IR) 
         begin
-            temp <= INSTR;
+            instr <= instruction_bus.instr_in;
         end
-        IR_ctrl_if.OPCODE <= temp[WORD_SIZE - 1:WORD_SIZE - 5];
-        IR_addr_if.out_address <= temp[WORD_SIZE-6:0]; // Send address operand
+        ctrl_bus.OPCODE <= instr[WORD_SIZE - 1:WORD_SIZE - 5];
+        addr_bus.out_address <= instr[WORD_SIZE - 6:0]; // Send address operand
     end
 endmodule

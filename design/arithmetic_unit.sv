@@ -1,12 +1,12 @@
 module arithmetic_unit (
-    input control_bus_if.ALU ctrl_bus_if, // 5-bit opcode
-    input logic [WORD_SIZE-1:0] operand_1, operand_2, // 19-bit operands
+    control_bus_if.ALU ctrl_bus_if, // 5-bit opcode
+    logic [WORD_SIZE-1:0] operand_1, operand_2, // 19-bit operands
     output logic [WORD_SIZE-1:0] out // 19-bit result
 );
     import constants::*;
     import opcodes::*;
 
-    // Function for Addition
+    // Addition
     function logic [WORD_SIZE-1:0] ADD_function(input logic [WORD_SIZE-1:0] in1, in2);
         logic [WORD_SIZE-1:0] a, b, carry;
         a = in1;
@@ -22,12 +22,12 @@ module arithmetic_unit (
         return a;
     endfunction
 
-    // Function for Subtraction
+    // Subtraction
     function logic [WORD_SIZE-1:0] SUB_function(input logic [WORD_SIZE-1:0] in1, in2);
-        return ADD_function(in1, ADD_function(~in2, 1)); // Two’s complement subtraction
+        return ADD_function(in1, ADD_function(~in2, 1)); // 2’s complement subtraction
     endfunction
 
-    // Function for Multiplication
+    // Multiplication
     function logic [WORD_SIZE-1:0] MUL_function(input logic [WORD_SIZE-1:0] in1, in2);
         logic [WORD_SIZE-1:0] result;
         result = 0;
@@ -40,7 +40,7 @@ module arithmetic_unit (
         return result;
     endfunction
 
-    // Function for Division
+    // Division
     function logic [WORD_SIZE-1:0] DIV_function(input logic [WORD_SIZE-1:0] in1, in2);
         logic [WORD_SIZE-1:0] quotient, remainder;
         quotient = 0;

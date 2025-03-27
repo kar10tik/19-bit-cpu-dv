@@ -19,12 +19,11 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
+//!Data bus interface has not been used with ALU, instead registers A and B will output operands MUXed with immediate operands
 module arith_logic_unit (
-    control_bus_if.ALU ALU_control,  
-    data_bus_if.alu ALU_data,  
-    input logic [WORD_SIZE-1:0] reg_data_1, reg_data_2,  // // FIXME Operand inputs
-    output logic [WORD_SIZE-1:0] result  // // FIXME ALU result output
+    control_bus_if.ALU ALU_control,    
+    input logic [WORD_SIZE-1:0] operand_1, operand_2,  // Operand inputs
+    output logic [WORD_SIZE-1:0] result  // ALU result output
 );
     import constants::*;
     import opcodes::*;
@@ -46,12 +45,16 @@ module arith_logic_unit (
         .out(logic_result)
     );
 
-    // Select between Arithmetic and Logic operations based on MODE signal
+    // Select between Arithmetic/Logic operations based on MODE signal
     always_comb begin
         if (ALU_control.MODE) 
             result = logic_result;  // Logical operations
         else 
             result = arith_result;  // Arithmetic operations
+        if (result == '0)
+            ALU_control.FLAGS[ZERO_FLAG] = 1
+        else if (result < 0) //TODO: MAKE BITWISE
+            ALU_control.FLAGS[SIGN_FLAG] = 1
     end
 
 endmodule
