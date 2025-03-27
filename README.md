@@ -3,17 +3,18 @@ Design and verification of a 19-bit CPU architecture in SystemVerilog.
 
 ![Block diagram](block_diagram.png)
 
-The 19-bit CPU has 19-bit instructions and a 19-bit word. 20-bit addresses allow for 1 MB memory.  
+The 19-bit CPU has 19-bit instructions and a 19-bit word. Memories are modeled as 19-bit word-addressable.
 This project was taken up as a challenge and refresher for CPU architecture concepts beyond the standard power-of-two memory and compute architectures.
 
 ---
 
 ## **Design**
-The CPU is designed for a **Harvard architecture** with separate instruction and data memories.  
-Signals are separated into three buses:
+The CPU is designed for a **Harvard architecture** with separate instruction and data memories and buses.  
+Signals are separated into buses:
 - **Control Bus** → Manages execution control signals
 - **Data Bus** → Transfers operand and result data
-- **Address Bus** → Determines memory locations
+- **Instruction Bus** → Transfers instructions
+- **Address Buses** → Determines memory locations, separate for instructions and data
 
 Since using standard 8-bit-byte- and 16-bit-word-addressable memories would waste space for 19-bit words, the memories modeled are 19-bit-word addressable. The control unit is pipelined with an RDFE state machine: Reset, Decode, Fetch, Execute.
 
@@ -60,7 +61,7 @@ The CPU shall support the following instructions:
 
 ## **Verification**
 
-The verification environment consists of:
+The verification environment (under development) shall consist of:
 - **Drivers** → Apply stimulus to DUT  
 - **Monitors** → Observe DUT behavior  
 - **Generators** → Generate test transactions (random/constrained)  
