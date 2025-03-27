@@ -16,13 +16,13 @@ Signals are separated into buses:
 - **Instruction Bus** → Transfers instructions
 - **Address Buses** → Determines memory locations, separate for instructions and data
 
-Since using standard 8-bit-byte- and 16-bit-word-addressable memories would waste space for 19-bit words, the memories modeled are 19-bit-word addressable. The control unit is pipelined with an RDFE state machine: Reset, Decode, Fetch, Execute.
+Since using standard 8-bit-byte- and 16-bit-word-addressable memories would waste space for 19-bit words, the memories modeled are 19-bit-word addressable. The control unit is pipelined with an RFDE state machine: Reset, Fetch, Decode, Execute.
 
 ---
 
 
 ## **Instruction Set (Supported Opcodes)**
-The CPU shall support the following instructions:
+The CPU shall support the instructions below. The instruction size shall be fixed at 32 bits to support for 19-bit immediate operands.
 
 ### **Logical Operations**
 | Instruction | Opcode  | Description |
