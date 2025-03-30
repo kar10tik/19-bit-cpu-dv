@@ -16,10 +16,10 @@ module arithmetic_unit_tb;
     );
 
     // Task to Run a Test Case
-    task run_test(logic [OPCODE_SIZE-1:0] op, 
+    task run_test(input logic [OPCODE_SIZE-1:0] op, 
                   logic [WORD_SIZE-1:0] op1, 
                   logic [WORD_SIZE-1:0] op2, 
-                  logic [WORD_SIZE-1:0] expected);
+                  output logic [WORD_SIZE-1:0] expected);
         begin
             opcode = op;
             operand_1 = op1;
